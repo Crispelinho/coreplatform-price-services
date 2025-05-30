@@ -11,10 +11,6 @@ The database used is **in-memory H2**, automatically initialized with test data 
 ---
 
 ## Features
-<<<<<<< HEAD
-
-=======
->>>>>>> 258c2ff (Release/v1.0.0 (#2))
 - REST endpoints for price queries.
 - Use of DTOs to structure responses.
 - Hexagonal architecture and SOLID principles.
