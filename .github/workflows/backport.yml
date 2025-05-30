@@ -91,7 +91,7 @@ jobs:
 
             OUTPUT=$(npx backport \
               --accessToken "$GITHUB_TOKEN" \
-              --repo Crispelinho/coreplatform-price-api \
+              --repo Crispelinho/coreplatform-price-services \
               --pr "$PR_NUMBER" \
               --branch "$branch" \
               --commitConflicts true \
