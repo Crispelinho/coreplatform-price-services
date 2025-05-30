@@ -70,7 +70,7 @@ jobs:
         run: |
           PR_NUMBER="${{ github.event.pull_request.number }}"
           if [ -z "$PR_NUMBER" ]; then
-            PR_NUMBER=18
+            PR_NUMBER=2
           fi
 
           RELEASE_BRANCHES="${{ steps.release_branches.outputs.branches }}"
