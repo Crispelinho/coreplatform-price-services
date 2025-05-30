@@ -11,7 +11,10 @@ The database used is **in-memory H2**, automatically initialized with test data 
 ---
 
 ## Features
+<<<<<<< HEAD
 
+=======
+>>>>>>> 258c2ff (Release/v1.0.0 (#2))
 - REST endpoints for price queries.
 - Use of DTOs to structure responses.
 - Hexagonal architecture and SOLID principles.
@@ -84,23 +87,40 @@ The `PRICES` table contains the following fields:
 To analyze code quality with SonarQube, follow these steps:
 
 1. Download SonarQube Developer Edition from:
+<<<<<<< HEAD
    <https://www.sonarsource.com/sem/products/sonarqube/downloads/success-download-developer-edition/>
 
 2. Start the SonarQube server locally (default at <http://localhost:9000>).
 
 3. Set up your project in SonarQube by visiting:
    <http://localhost:9000/dashboard?id=price-service>
+=======
+   https://www.sonarsource.com/sem/products/sonarqube/downloads/success-download-developer-edition/
+
+2. Start the SonarQube server locally (default at http://localhost:9000).
+
+3. Set up your project in SonarQube by visiting:
+   http://localhost:9000/dashboard?id=price-service
+>>>>>>> 258c2ff (Release/v1.0.0 (#2))
 
 4. Run the following command to clean, test, generate the coverage report, and launch the SonarQube analysis:
 
 ```sh
+<<<<<<< HEAD
 ./gradlew clean test jacocoTestReport sonar -Dsonar.token=<SONAR_TOKEN>
+=======
+./gradlew clean test jacocoTestReport sonar -Dsonar.login=<SONAR_TOKEN>
+>>>>>>> 258c2ff (Release/v1.0.0 (#2))
 ```
 
 Replace `<SONAR_TOKEN>` with your personal SonarQube token, for example:
 
 ```sh
+<<<<<<< HEAD
 ./gradlew clean test jacocoTestReport sonar "-Dsonar.token=sqp_11a00eb0eb9a2afdd66c9cb83c225bcd947793fa"
+=======
+./gradlew clean test jacocoTestReport sonar "-Dsonar.login=sqp_11a00eb0eb9a2afdd66c9cb83c225bcd947793fa"
+>>>>>>> 258c2ff (Release/v1.0.0 (#2))
 ```
 
 - The Jacoco coverage report will be at `build/reports/jacoco/test/html/index.html`.
@@ -307,6 +327,7 @@ build/
 load-tests/
   load-test.js
 
+<<<<<<< HEAD
 ```
 
 ---
@@ -322,3 +343,6 @@ The project includes automated pipelines configured in the `.github/workflows/` 
 You can customize these workflows by editing the YAML files in `.github/workflows/` as needed for your team or environment.
 
 ---
+=======
+```
+>>>>>>> 258c2ff (Release/v1.0.0 (#2))
