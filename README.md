@@ -11,6 +11,7 @@ The database used is **in-memory H2**, automatically initialized with test data 
 ---
 
 ## Features
+
 - REST endpoints for price queries.
 - Use of DTOs to structure responses.
 - Hexagonal architecture and SOLID principles.
@@ -215,6 +216,7 @@ coreplatform-price-services/
 ├── .gitignore
 ├── build.gradle
 ├── CHANGELOG.md
+├── Dockerfile
 ├── gradlew
 ├── gradlew.bat
 ├── README.md
