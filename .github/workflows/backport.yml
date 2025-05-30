@@ -1,0 +1,174 @@
+name: 🔁 Backport on merge to main
+
+on:
+  push:
+    branches: 
+      - hotfix/v1.0.2-add-backport-pipeline
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  backport:
+    if: |
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/hotfix/v1.0.2-add-backport-pipeline')
+    
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Debug path and git
+        run: |
+          echo "PATH=$PATH"
+          which git
+          git --version
+          node -e "require('child_process').exec('git --version', (err, stdout, stderr) => {
+            if (err) console.error('ERROR:', err);
+            console.log('stdout:', stdout);
+            console.error('stderr:', stderr);
+          })"
+
+      - name: Add git to PATH explicitly
+        run: echo "/usr/bin" >> $GITHUB_PATH
+        
+      - name: Install Backport CLI
+        run: npm install -g backport
+
+      - name: Get list of release/* branches
+        id: release_branches
+        run: |
+          RELEASE_BRANCHES=$(git ls-remote --heads origin 'refs/heads/release/*' | awk '{print $2}' | sed 's#refs/heads/##' | tr '\n' ' ')
+          if [ -z "$RELEASE_BRANCHES" ]; then
+            echo "branches="
+          else
+            echo "branches=$(echo $RELEASE_BRANCHES | tr '\n' ' ')"  >> $GITHUB_OUTPUT
+          fi
+
+      - name: Verify git remotes
+        run: git remote -v
+
+      - name: Set remote origin with GitHub token
+        run: git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        
+      - name: Run Backport to develop and release/*
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          if [ -z "$PR_NUMBER" ]; then
+            PR_NUMBER=18
+          fi
+
+          RELEASE_BRANCHES="${{ steps.release_branches.outputs.branches }}"
+
+          echo "🚀 Ramas release detectadas: '$RELEASE_BRANCHES'"
+
+          if [ -z "$RELEASE_BRANCHES" ]; then
+            echo "⚠️ No se encontraron ramas release/*. Solo se hará backport a 'develop'."
+            BRANCHES="develop"
+          else
+            BRANCHES="develop $RELEASE_BRANCHES"
+          fi
+
+          echo "🚀 Ramas destino backport: '$BRANCHES'"
+
+          for branch in $BRANCHES; do
+            echo "➡️ Backporting PR #$PR_NUMBER to branch '$branch'..."
+
+            OUTPUT=$(npx backport \
+              --accessToken "$GITHUB_TOKEN" \
+              --repo Crispelinho/coreplatform-price-api \
+              --pr "$PR_NUMBER" \
+              --branch "$branch" \
+              --commitConflicts true\
+              --nonInteractive true\
+              --assignee Crispelinho \
+              --copySourcePRLabels true \
+              --copySourcePRReviewers true \
+              --fork false \
+              --prTitle "Backport PR #$PR_NUMBER to '$branch'" \
+              --prDescription "Backport automático del PR #$PR_NUMBER a '$branch'" \
+              --backportBranchName "backport/pr-$PR_NUMBER-to-$branch" 2>&1)
+
+            sleep 5
+
+            EXIT_CODE=$?
+            echo "$OUTPUT"
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f0df6d (Hotfix/v1.0.2 add backport pipeline (#22))
+            if [ $EXIT_CODE -ne 0 ]; then
+              if echo "$OUTPUT" | grep -q "is empty. Did you already backport this commit?"; then
+                echo "⚠️ El commit ya está presente en '$branch'. No es necesario realizar backport."
+              elif echo "$OUTPUT" | grep -q "Please fix the conflicts"; then
+                echo "⚠️ Conflictos encontrados en '$branch'. Se creó PR para resolverlos manualmente."
+              elif echo "$OUTPUT" | grep -q "The PR #$PR_NUMBER is not merged"; then
+                echo "⚠️ El PR #$PR_NUMBER aún no ha sido mergeado. No se puede hacer backport."
+              elif echo "$OUTPUT" | grep -q "Cherrypick failed because commit .* was not found"; then
+                echo "⚠️ No se encontró el commit original para hacer cherry-pick. Puede que el PR haya cambiado o el SHA no exista."
+<<<<<<< HEAD
+=======
+          if [ $EXIT_CODE -ne 0 ]; then
+            # Manejo de errores conocidos
+            if echo "$OUTPUT" | grep -q "is empty. Did you already backport this commit?"; then
+              echo "⚠️ El commit ya está presente en '$branch'. No es necesario realizar backport."
+            elif echo "$OUTPUT" | grep -q "Please fix the conflicts"; then
+              echo "⚠️ Conflictos encontrados en '$branch'. Se creó PR para resolverlos manualmente."
+            elif echo "$OUTPUT" | grep -q "The PR #$PR_NUMBER is not merged"; then
+              echo "⚠️ El PR #$PR_NUMBER aún no ha sido mergeado. No se puede hacer backport."
+            elif echo "$OUTPUT" | grep -q "Cherrypick failed because commit .* was not found"; then
+              echo "⚠️ No se encontró el commit original para hacer cherry-pick. Puede que el PR haya cambiado o el SHA no exista."
+            else
+              echo "❌ Error desconocido durante el backport a '$branch'. Revisión necesaria."
+            fi  
+
+            echo "🔍 Se imprime log backport:"
+            cat ~/.backport/backport.info.log || echo "⚠️ No se pudo leer el archivo de log"
+
+          else
+            # Éxito si contiene el link del PR
+            if echo "$OUTPUT" | grep -q "View pull request: https://github.com/.*/pull/[0-9]\+"; then
+              if echo "$OUTPUT" | grep -q "An unhandled error occurred while backporting commit"; then
+                echo "❌ Ocurrió un error no manejado durante el backport. Mostrando el log de backport:"
+>>>>>>> 108b9d7 (Hotfix/v1.0.2 add backport pipeline (#18))
+=======
+>>>>>>> 3f0df6d (Hotfix/v1.0.2 add backport pipeline (#22))
+              else
+                echo "❌ Error desconocido durante el backport a '$branch'. Revisión necesaria."
+              fi  
+
+              echo "🔍 Se imprime log backport:"
+              cat ~/.backport/backport.info.log || echo "⚠️ No se pudo leer el archivo de log"
+
+            else
+              if echo "$OUTPUT" | grep -q "View pull request: https://github.com/.*/pull/[0-9]\+"; then
+                if echo "$OUTPUT" | grep -q "An unhandled error occurred while backporting commit"; then
+                  echo "❌ Ocurrió un error no manejado durante el backport. Mostrando el log de backport:"
+                else
+                  echo "✅ Backport a '$branch' realizado con éxito."
+                fi
+              else
+                echo "⚠️ El comando terminó sin error, no se creó el PR de backport esperado. Revisión necesaria."
+                echo "🔍 Output:"
+                echo "$OUTPUT"
+                echo "🔍 Se imprime log backport:"
+                cat ~/.backport/backport.info.log || echo "⚠️ No se pudo leer el archivo de log"
+              fi
+            fi
+          done
