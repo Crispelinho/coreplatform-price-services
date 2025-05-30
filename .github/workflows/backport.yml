@@ -3,7 +3,7 @@ name: 🔁 Backport on merge to main
 on:
   push:
     branches: 
-      - hotfix/v1.0.2-add-backport-pipeline
+      - feature/add-ci-cd-pipeline
   pull_request:
     types: [closed]
     branches:
