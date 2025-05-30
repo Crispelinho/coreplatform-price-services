@@ -2,7 +2,6 @@
 
 All significant changes to this project will be documented in this file.
 
-<<<<<<< HEAD
 ## [1.0.1] - 2025-05-29
 
 ### Added
@@ -16,10 +15,6 @@ All significant changes to this project will be documented in this file.
 
 ### Added
 
-=======
-## [1.0.0] - 2025-05-29
-### Added
->>>>>>> 258c2ff (Release/v1.0.0 (#2))
 - Initial project structure following hexagonal architecture.
 - Implementation of REST endpoints for price queries.
 - Domain model and DTOs (`Price`, `PriceResponse`).
