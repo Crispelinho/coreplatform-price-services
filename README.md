@@ -216,6 +216,7 @@ coreplatform-price-services/
 ├── .gitignore
 ├── build.gradle
 ├── CHANGELOG.md
+├── Dockerfile
 ├── gradlew
 ├── gradlew.bat
 ├── README.md
