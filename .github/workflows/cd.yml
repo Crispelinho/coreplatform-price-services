@@ -1,0 +1,99 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - feature/add-ci-cd-pipeline
+      - 'release/*'
+      - hotfix/*
+    tags:
+      - 'v*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Log in to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x gradlew
+
+      - name: Build project with Gradle
+        run: ./gradlew clean build
+
+      - name: Build Docker image
+        run: docker build -t cristhiancarpio/price-service:${{ github.run_number }} .
+
+      - name: Push Docker image
+        run: docker push cristhiancarpio/price-service:${{ github.run_number }}
+
+      - name: Pull and Run Latest Image
+        run: |
+          docker pull cristhiancarpio/price-service:${{ github.run_number }}
+          docker run -d --name price-service -p 8080:8080 cristhiancarpio/price-service:${{ github.run_number }}
+
+      - name: Test HTTP response
+        run: |
+          for i in {1..10}; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/actuator/health || echo "000")
+            if [ "$STATUS" = "200" ]; then
+              echo "Service is up!"
+              break
+            else
+              echo "Waiting for service... status: $STATUS"
+              sleep 2
+            fi
+          done
+
+      - name: Wait for container to initialize
+        run: sleep 10
+
+      - name: Show container logs
+        run: docker logs price-service
+
+      - name: List running containers
+        run: docker ps -a
+      - name: Install k6
+        run: |
+          sudo apt update
+          sudo apt install -y gnupg ca-certificates
+          curl -s https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/k6.gpg
+          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt update
+          sudo apt install -y k6
+
+      - name: Run Load Test and Save to JSON
+        run: k6 run load-tests/load-test.js --out json=load-test-result.json
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '17'
+
+      - name: Clone and Set Up k6-reporter
+        run: |
+          git clone https://github.com/benc-uk/k6-reporter.git
+          cd k6-reporter
+          npm install
+          NODE_OPTIONS=--openssl-legacy-provider npm run build
+
+      - name: Generate HTML Report from JSON
+        run: node k6-reporter/dist/bundle.js ../load-test-result.json -o ../load-test-report.html
+
+      - name: Upload HTML Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: load-test-html-report
+          path: load-test-report.html

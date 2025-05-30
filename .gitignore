@@ -35,3 +35,12 @@ out/
 
 ### VS Code ###
 .vscode/
+<<<<<<< HEAD
+=======
+
+### Husky ###
+.husky
+
+### SonarLint ###
+.sonarlint/
+>>>>>>> d76c044 (Branch synchronization after backport testing (#13))
