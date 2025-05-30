@@ -5,7 +5,6 @@ import com.inditex.coreplatform.price_service.application.usecases.GetPricesUseC
 import com.inditex.coreplatform.price_service.application.usecases.queries.GetApplicablePriceQuery;
 import com.inditex.coreplatform.price_service.domain.models.Price;
 import com.inditex.coreplatform.price_service.infrastructure.mappers.PriceMapper;
-import com.inditex.coreplatform.price_service.infrastructure.rest.controllers.PriceController;
 import com.inditex.coreplatform.price_service.infrastructure.rest.controllers.dtos.PriceResponse;
 
 
@@ -19,9 +18,14 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class PriceControllerTest {
 

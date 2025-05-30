@@ -12,17 +12,20 @@ import org.springframework.http.server.RequestPath;
 
 import com.inditex.coreplatform.price_service.application.exceptions.MissingPriceApplicationRequestParamException;
 import com.inditex.coreplatform.price_service.infrastructure.rest.controllers.dtos.ErrorPriceResponse;
-import com.inditex.coreplatform.price_service.infrastructure.rest.exceptions.GlobalExceptionHandler;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Path;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.util.Collections;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class GlobalExceptionHandlerTest {
 

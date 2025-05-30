@@ -1,17 +1,18 @@
 package com.inditex.coreplatform.price_service.application.usecases;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 
 import com.inditex.coreplatform.price_service.domain.models.Price;
 import com.inditex.coreplatform.price_service.domain.ports.IPriceService;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
-import static org.mockito.Mockito.*;
 
 class GetPricesUseCaseTest {
 
