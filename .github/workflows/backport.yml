@@ -94,8 +94,8 @@ jobs:
               --repo Crispelinho/coreplatform-price-api \
               --pr "$PR_NUMBER" \
               --branch "$branch" \
-              --commitConflicts true\
-              --nonInteractive true\
+              --commitConflicts true \
+              --nonInteractive true \
               --assignee Crispelinho \
               --copySourcePRLabels true \
               --copySourcePRReviewers true \
@@ -109,10 +109,6 @@ jobs:
             EXIT_CODE=$?
             echo "$OUTPUT"
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3f0df6d (Hotfix/v1.0.2 add backport pipeline (#22))
             if [ $EXIT_CODE -ne 0 ]; then
               if echo "$OUTPUT" | grep -q "is empty. Did you already backport this commit?"; then
                 echo "⚠️ El commit ya está presente en '$branch'. No es necesario realizar backport."
@@ -122,33 +118,6 @@ jobs:
                 echo "⚠️ El PR #$PR_NUMBER aún no ha sido mergeado. No se puede hacer backport."
               elif echo "$OUTPUT" | grep -q "Cherrypick failed because commit .* was not found"; then
                 echo "⚠️ No se encontró el commit original para hacer cherry-pick. Puede que el PR haya cambiado o el SHA no exista."
-<<<<<<< HEAD
-=======
-          if [ $EXIT_CODE -ne 0 ]; then
-            # Manejo de errores conocidos
-            if echo "$OUTPUT" | grep -q "is empty. Did you already backport this commit?"; then
-              echo "⚠️ El commit ya está presente en '$branch'. No es necesario realizar backport."
-            elif echo "$OUTPUT" | grep -q "Please fix the conflicts"; then
-              echo "⚠️ Conflictos encontrados en '$branch'. Se creó PR para resolverlos manualmente."
-            elif echo "$OUTPUT" | grep -q "The PR #$PR_NUMBER is not merged"; then
-              echo "⚠️ El PR #$PR_NUMBER aún no ha sido mergeado. No se puede hacer backport."
-            elif echo "$OUTPUT" | grep -q "Cherrypick failed because commit .* was not found"; then
-              echo "⚠️ No se encontró el commit original para hacer cherry-pick. Puede que el PR haya cambiado o el SHA no exista."
-            else
-              echo "❌ Error desconocido durante el backport a '$branch'. Revisión necesaria."
-            fi  
-
-            echo "🔍 Se imprime log backport:"
-            cat ~/.backport/backport.info.log || echo "⚠️ No se pudo leer el archivo de log"
-
-          else
-            # Éxito si contiene el link del PR
-            if echo "$OUTPUT" | grep -q "View pull request: https://github.com/.*/pull/[0-9]\+"; then
-              if echo "$OUTPUT" | grep -q "An unhandled error occurred while backporting commit"; then
-                echo "❌ Ocurrió un error no manejado durante el backport. Mostrando el log de backport:"
->>>>>>> 108b9d7 (Hotfix/v1.0.2 add backport pipeline (#18))
-=======
->>>>>>> 3f0df6d (Hotfix/v1.0.2 add backport pipeline (#22))
               else
                 echo "❌ Error desconocido durante el backport a '$branch'. Revisión necesaria."
               fi  
@@ -160,6 +129,7 @@ jobs:
               if echo "$OUTPUT" | grep -q "View pull request: https://github.com/.*/pull/[0-9]\+"; then
                 if echo "$OUTPUT" | grep -q "An unhandled error occurred while backporting commit"; then
                   echo "❌ Ocurrió un error no manejado durante el backport. Mostrando el log de backport:"
+                  cat ~/.backport/backport.info.log || echo "⚠️ No se pudo leer el archivo de log"
                 else
                   echo "✅ Backport a '$branch' realizado con éxito."
                 fi
