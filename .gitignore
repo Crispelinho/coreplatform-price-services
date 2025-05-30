@@ -35,3 +35,12 @@ out/
 
 ### VS Code ###
 .vscode/
+<<<<<<< HEAD
+=======
+
+### Husky ###
+.husky
+
+### SonarLint ###
+.sonarlint/
+>>>>>>> 584b875 (Hotfix/v1.0.2 add backport pipeline (#11))

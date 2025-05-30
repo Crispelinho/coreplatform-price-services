@@ -11,6 +11,10 @@ The database used is **in-memory H2**, automatically initialized with test data 
 ---
 
 ## Features
+<<<<<<< HEAD
+=======
+
+>>>>>>> 584b875 (Hotfix/v1.0.2 add backport pipeline (#11))
 - REST endpoints for price queries.
 - Use of DTOs to structure responses.
 - Hexagonal architecture and SOLID principles.
@@ -83,23 +87,40 @@ The `PRICES` table contains the following fields:
 To analyze code quality with SonarQube, follow these steps:
 
 1. Download SonarQube Developer Edition from:
+<<<<<<< HEAD
    https://www.sonarsource.com/sem/products/sonarqube/downloads/success-download-developer-edition/
 
 2. Start the SonarQube server locally (default at http://localhost:9000).
 
 3. Set up your project in SonarQube by visiting:
    http://localhost:9000/dashboard?id=price-service
+=======
+   <https://www.sonarsource.com/sem/products/sonarqube/downloads/success-download-developer-edition/>
+
+2. Start the SonarQube server locally (default at <http://localhost:9000>).
+
+3. Set up your project in SonarQube by visiting:
+   <http://localhost:9000/dashboard?id=price-service>
+>>>>>>> 584b875 (Hotfix/v1.0.2 add backport pipeline (#11))
 
 4. Run the following command to clean, test, generate the coverage report, and launch the SonarQube analysis:
 
 ```sh
+<<<<<<< HEAD
 ./gradlew clean test jacocoTestReport sonar -Dsonar.login=<SONAR_TOKEN>
+=======
+./gradlew clean test jacocoTestReport sonar -Dsonar.token=<SONAR_TOKEN>
+>>>>>>> 584b875 (Hotfix/v1.0.2 add backport pipeline (#11))
 ```
 
 Replace `<SONAR_TOKEN>` with your personal SonarQube token, for example:
 
 ```sh
+<<<<<<< HEAD
 ./gradlew clean test jacocoTestReport sonar "-Dsonar.login=sqp_11a00eb0eb9a2afdd66c9cb83c225bcd947793fa"
+=======
+./gradlew clean test jacocoTestReport sonar "-Dsonar.token=sqp_11a00eb0eb9a2afdd66c9cb83c225bcd947793fa"
+>>>>>>> 584b875 (Hotfix/v1.0.2 add backport pipeline (#11))
 ```
 
 - The Jacoco coverage report will be at `build/reports/jacoco/test/html/index.html`.
@@ -306,4 +327,22 @@ build/
 load-tests/
   load-test.js
 
+<<<<<<< HEAD
 ```
+=======
+```
+
+---
+
+## Continuous Integration and Deployment (CI/CD)
+
+The project includes automated pipelines configured in the `.github/workflows/` folder:
+
+- **ci.yml**: Runs the continuous integration pipeline on every push, pull request, or relevant branch creation. Checks out the code, sets up JDK 17, runs build, tests, and generates coverage reports with Jacoco. Results and reports are uploaded as workflow artifacts.
+- **cd.yml**: Continuous deployment pipeline, responsible for publishing the generated artifact to a test or production environment after passing tests and validations.
+- **backport.yml**: Automates the creation of backport pull requests when merging to `main`, facilitating synchronization with `develop` or `release/*` branches.
+
+You can customize these workflows by editing the YAML files in `.github/workflows/` as needed for your team or environment.
+
+---
+>>>>>>> 584b875 (Hotfix/v1.0.2 add backport pipeline (#11))
