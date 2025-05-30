@@ -1,0 +1,52 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: 
+      - feature/add-ci-cd-pipeline
+      - 'release/*'
+      - develop
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+  create:
+
+jobs:
+  build:
+    # Ejecuta solo si:
+    # - Es un push a feature/add-ci-cd-pipeline, develop, main o release/*
+    # - Se crea un pull_request a cualquier rama
+    # - Se crea una rama con prefijo release/v
+    if: github.event_name == 'pull_request' || github.event_name == 'push' || (github.event_name == 'create' && github.ref_type == 'branch' && startsWith(github.ref, 'refs/heads/release/v'))
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Grant execute permission for Gradle wrapper
+      run: chmod +x gradlew
+
+    - name: Clean, build, test, and generate coverage report
+      run: ./gradlew clean build jacocoTestReport
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: test-results
+        path: build/test-results/test
+
+    - name: Upload code coverage report
+      if: always()
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: coverage-report
+        path: build/reports/jacoco/test/html
