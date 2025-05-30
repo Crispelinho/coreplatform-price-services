@@ -2,14 +2,6 @@
 
 All significant changes to this project will be documented in this file.
 
-## [1.0.2] - 2025-05-30
-
-### Changed
-
-- Updated backport workflow to trigger on `hotfix/v1.0.2-add-backport-pipeline` branch.
-- Fixed repository reference in backport workflow to use `coreplatform-price-services`.
-- Set default PR number to 5 in backport workflow for testing purposes.
-
 ## [1.0.1] - 2025-05-29
 
 ### Added

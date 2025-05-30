@@ -11,7 +11,10 @@ The database used is **in-memory H2**, automatically initialized with test data 
 ---
 
 ## Features
+<<<<<<< HEAD
 
+=======
+>>>>>>> 258c2ff (Release/v1.0.0 (#2))
 - REST endpoints for price queries.
 - Use of DTOs to structure responses.
 - Hexagonal architecture and SOLID principles.
@@ -318,7 +321,5 @@ The project includes automated pipelines configured in the `.github/workflows/` 
 - **ci.yml**: Runs the continuous integration pipeline on every push, pull request, or relevant branch creation. Checks out the code, sets up JDK 17, runs build, tests, and generates coverage reports with Jacoco. Results and reports are uploaded as workflow artifacts.
 - **cd.yml**: Continuous deployment pipeline, responsible for publishing the generated artifact to a test or production environment after passing tests and validations.
 - **backport.yml**: Automates the creation of backport pull requests when merging to `main`, facilitating synchronization with `develop` or `release/*` branches.
-
-You can customize these workflows by editing the YAML files in `.github/workflows/` as needed for your team or environment.
 
 ---
