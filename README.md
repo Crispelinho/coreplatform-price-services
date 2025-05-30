@@ -78,6 +78,34 @@ The `PRICES` table contains the following fields:
 
 7. (Optional) To analyze code quality with SonarQube, make sure you have a SonarQube server available and configure the necessary properties in `build.gradle` or `sonar-project.properties`.
 
+## SonarQube Integration
+
+To analyze code quality with SonarQube, follow these steps:
+
+1. Download SonarQube Developer Edition from:
+   https://www.sonarsource.com/sem/products/sonarqube/downloads/success-download-developer-edition/
+
+2. Start the SonarQube server locally (default at http://localhost:9000).
+
+3. Set up your project in SonarQube by visiting:
+   http://localhost:9000/dashboard?id=price-service
+
+4. Run the following command to clean, test, generate the coverage report, and launch the SonarQube analysis:
+
+```sh
+./gradlew clean test jacocoTestReport sonar -Dsonar.login=<SONAR_TOKEN>
+```
+
+Replace `<SONAR_TOKEN>` with your personal SonarQube token, for example:
+
+```sh
+./gradlew clean test jacocoTestReport sonar "-Dsonar.login=sqp_11a00eb0eb9a2afdd66c9cb83c225bcd947793fa"
+```
+
+- The Jacoco coverage report will be at `build/reports/jacoco/test/html/index.html`.
+- The test report will be at `build/reports/tests/test/index.html`.
+- The analysis results will be available in the SonarQube dashboard.
+
 ---
 
 ## Available Endpoints
@@ -111,7 +139,9 @@ The `PRICES` table contains the following fields:
 
 - Returns the applicable price for a given product, brand, and date.
 - Success response: HTTP 200 and a `PriceResponse` object.
-- If no applicable price exists: HTTP 404.
+- If no applicable price exists: HTTP 404 (no body).
+- If any required parameter is missing or invalid: HTTP 400 and an error body.
+- If an internal server error occurs: HTTP 500 and an error body.
 
 #### Parameters
 
@@ -121,7 +151,7 @@ The `PRICES` table contains the following fields:
 | `productId`      | `Integer`| Product identifier                                       |
 | `brandId`        | `Integer`| Brand identifier                                         |
 
-#### Example of a successful response
+#### Example of a successful response (HTTP 200)
 
 ```json
 {
@@ -137,6 +167,44 @@ The `PRICES` table contains the following fields:
 #### Example of a response when no applicable price exists
 
 - HTTP status code: 404 Not Found
+
+#### Example of a bad request response (HTTP 400)
+
+When a parameter is invalid (e.g., negative brandId):
+
+```json
+{
+  "status": 400,
+  "error": "Bad Request",
+  "message": "'getApplicablePrice.arg1' must be a positive integer",
+  "path": "/api/prices/applicable",
+  "timestamp": "2025-05-29T19:20:02.1970393"
+}
+```
+
+When a required parameter is missing:
+
+```json
+{
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Required request parameter 'productId' for method parameter type Integer is not present",
+  "path": "/api/prices/applicable",
+  "timestamp": "2025-05-29T19:21:10.1234567"
+}
+```
+
+#### Example of an internal server error response (HTTP 500)
+
+```json
+{
+  "status": 500,
+  "error": "Internal Server Error",
+  "message": "Unexpected error occurred while processing the request.",
+  "path": "/api/prices/applicable",
+  "timestamp": "2025-05-29T19:22:30.9876543"
+}
+```
 
 ---
 
