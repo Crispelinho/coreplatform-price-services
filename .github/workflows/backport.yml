@@ -70,7 +70,7 @@ jobs:
         run: |
           PR_NUMBER="${{ github.event.pull_request.number }}"
           if [ -z "$PR_NUMBER" ]; then
-            PR_NUMBER=2
+            PR_NUMBER=5
           fi
 
           RELEASE_BRANCHES="${{ steps.release_branches.outputs.branches }}"
@@ -91,7 +91,7 @@ jobs:
 
             OUTPUT=$(npx backport \
               --accessToken "$GITHUB_TOKEN" \
-              --repo Crispelinho/coreplatform-price-api \
+              --repo Crispelinho/coreplatform-price-services \
               --pr "$PR_NUMBER" \
               --branch "$branch" \
               --commitConflicts true \
